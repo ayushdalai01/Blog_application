@@ -5,18 +5,15 @@ const path = require('path')
 const router = express.Router();
 const { createToken } = require('../services/auth');
 const Blog = require('../models/blog')
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../services/cloudinary");
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "blog-images",
-    allowed_formats: ["jpg", "jpeg", "png", "webp"],
-  },
+const storage = multer.diskStorage({
+  filename: function (req,file,cb) {
+    cb(null, file.originalname)
+  }
 });
 
-const upload = multer({ storage });
+const upload = multer({storage: storage});
 
 router.get('/signin', (req, res) => {
     return res.render('signin')
@@ -81,24 +78,35 @@ router.post('/signup', upload.single('profileImageURL'), async (req, res) => {
 
     // const profileImageURL = req.file ? req.file.secure_url : undefined
 
-    try{
-        const user = await User.create({
-            fullName,
-            email,
-            password,
-            profileImageURL : req.file?.path
-        });
 
-        const token = createToken(user);
+    cloudinary.uploader.upload(req.file.path, async function (err, result){
+        if(err) {
+            console.log(err);
+            return res.status(500).json({
+                success: false,
+                message: "Error"
+            })
+        }
 
-        return res.cookie('token', token, {
-            httpOnly: true,
-            sameSite: 'lax'
-        }).redirect('/');
+        try{
+            const user = await User.create({
+                fullName,
+                email,
+                password,
+                profileImageURL : result.secure_url
+            });
 
-    } catch (err){
-        console.log('error : ', err);
-    }
+            const token = createToken(user);
+
+            return res.cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'lax'
+            }).redirect('/');
+
+        } catch (err){
+            console.log('error : ', err);
+        }
+    })
 })
 
 router.get('/myblog', async(req, res) => {
