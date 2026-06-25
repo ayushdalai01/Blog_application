@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Signup</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            min-height: 100vh;
+        }
+        .auth-page {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 15px;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            padding: 32px;
+        }
+        .auth-card h2 {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .auth-card .form-control {
+            border-radius: 10px;
+            padding: 0.75rem 0.9rem;
+        }
+        .auth-card .btn-primary {
+            width: 100%;
+            border-radius: 10px;
+            padding: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('./partials/nav') %>
+    <%- include('./partials/scripts') %>
+
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <div class="rounded-circle d-inline-flex align-items-center justify-content-center bg-primary text-white" style="width: 58px; height: 58px; font-size: 1.4rem;">
+                    ✨
+                </div>
+                <h2 class="mt-3 mb-1">Create Account</h2>
+            </div>
+            <form action="/user/signup" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="signupFullName" class="form-label">Full Name</label>
+                    <input type="text" name="fullName" class="form-control" id="signupFullName">
+                </div>
+                <div class="mb-3">
+                    <label for="profileImageURL" class="form-label"> Profile Image </label>
+                    <input type="file" class="form-control" id="signupprofileImage" name="profileImageURL" accept="image/*">
+                </div>
+                <div class="mb-3">
+                    <label for="signupEmail" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" id="signupEmail">
+                </div>
+                <div class="mb-3">
+                    <label for="signupPassword" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="signupPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
