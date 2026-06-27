@@ -78,35 +78,26 @@ router.post('/signup', upload.single('profileImageURL'), async (req, res) => {
 
     // const profileImageURL = req.file ? req.file.secure_url : undefined
 
+    const user = {
+        fullName,
+        email,
+        password,
+    }
 
-    cloudinary.uploader.upload(req.file.path, async function (err, result){
-        if(err) {
-            console.log(err);
-            return res.status(500).json({
-                success: false,
-                message: "Error"
-            })
-        }
+    if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        user.coverImage = result.secure_url;
+    }
 
-        try{
-            const user = await User.create({
-                fullName,
-                email,
-                password,
-                profileImageURL : result.secure_url
-            });
+    await User.create(user);
 
-            const token = createToken(user);
+    const token = createToken(user);
 
-            return res.cookie('token', token, {
-                httpOnly: true,
-                sameSite: 'lax'
-            }).redirect('/');
+    return res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'lax'
+    }).redirect('/');
 
-        } catch (err){
-            console.log('error : ', err);
-        }
-    })
 })
 
 router.get('/myblog', async(req, res) => {
