@@ -3,6 +3,22 @@
 <head>
     <%- include('./partials/head') %>
     <title>My Blogs</title>
+    <style>
+        .bottom-right-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
 
@@ -10,7 +26,7 @@
 
     <div class="container mt-4">
 
-    <h2 class="mb-4 fw-bold">My Blogs</h2>
+    <h2 class="mb-4 fw-bold">My Blogs (<%= blogs.length %>) </h2>
 
     <div class="row g-4">
         <% blogs.forEach(blog => { %>
@@ -39,6 +55,13 @@
                                 View
                             </a>
 
+                            <a
+                                href="/blog/edit/<%= blog._id %>"
+                                class="btn btn-warning flex-grow-1"
+                            >
+                                Edit
+                            </a>
+
                             <form
                                 action="/user/myblog/<%= blog._id %>"
                                 method="POST"
@@ -52,18 +75,16 @@
                                     Delete
                                 </button>
                             </form>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
         <% }) %>
     </div>
 
-</div>
+    <a class = "bottom-right-box" href = "/blog/addnew"> + Add New </a>
 
+</div>
 
     <%- include('./partials/scripts') %>
 

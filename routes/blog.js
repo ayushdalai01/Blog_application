@@ -67,6 +67,39 @@ router.get('/:id', async (req, res) => {
     })
 })
 
+router.get('/edit/:id', async (req, res) => {
+    return res.render('editblog', {
+        blog : await Blog.findById(req.params.id)
+    })
+})
+
+router.post('/edit/:id', upload.single('coverImage'), async (req, res) => {
+    try {
+        const { title, content } = req.body;
+
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).send("Blog not found");
+        }
+
+        blog.title = title;
+        blog.content = content;
+
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            blog.coverImage = result.secure_url;
+        }
+
+        await blog.save();
+
+        res.redirect('/user/myblog');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 router.post('/comment/:blogId', async (req, res) => {
 
     const comment = await Comment.create({
