@@ -86,7 +86,7 @@ router.post('/signup', upload.single('profileImageURL'), async (req, res) => {
 
     if (req.file) {
         const result = await cloudinary.uploader.upload(req.file.path);
-        user.coverImage = result.secure_url;
+        user.profileImageURL = result.secure_url;
     }
 
     await User.create(user);
