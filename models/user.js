@@ -51,7 +51,7 @@ userSchema.pre('save', function (next) {
 userSchema.static('matchPassword', async function(email, password) {
     const user = await this.findOne({ email });
 
-    console.log(user)
+    // console.log(user)
 
     if(!user) throw new Error('user not found');
 
@@ -70,6 +70,6 @@ userSchema.static('matchPassword', async function(email, password) {
     // return {...user, password : undefined, salt : undefined}
 })
 
-const User = model('user', userSchema)
+const User = model('user', userSchema) 
 
 module.exports = User;

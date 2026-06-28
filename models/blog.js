@@ -19,7 +19,7 @@ const blogSchema = new Schema({
         ref : 'user'
     }
 },{ timestamps : true}
-);
+); 
 
 const Blog = model('blog', blogSchema)
 

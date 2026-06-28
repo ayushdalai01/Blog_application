@@ -24,11 +24,6 @@ router.post('/signin', async (req, res) => {
 
     try{
 
-        // const token = await User.matchPassword(email, password)
-
-        // // console.log('token : ', token)
-        // return res.cookie(token).redirect('/')
-
         const token = await User.matchPassword(email, password);
 
         return res.cookie('token', token, {
@@ -48,35 +43,12 @@ router.get('/signup', (req, res) => {
 })
 
 router.post('/signup', upload.single('profileImageURL'), async (req, res) => {
-    // const { fullName, email, password } = req.body;
-
-    // console.log(fullName);
-    // console.log(req.body);
-
-    // if (!fullName || !email || !password) {
-    //     return res.status(400).send('All fields are required');
-    // }
-
-    // await User.create({
-    //     fullName,
-    //     email,
-    //     password,
-    //     profileImageURL : `/uploads/${req.file.filename}`
-    // });
-
-    // return res.redirect('/');
 
     const { fullName, email, password } = req.body;
 
     if (!fullName || !email || !password) {
         return res.status(400).send('All fields are required');
     }
-
-    // const profileImageURL = req.file
-    //     ? `/uploads/${req.file.filename}`
-    //     : undefined;
-
-    // const profileImageURL = req.file ? req.file.secure_url : undefined
 
     const user = {
         fullName,
@@ -89,9 +61,9 @@ router.post('/signup', upload.single('profileImageURL'), async (req, res) => {
         user.profileImageURL = result.secure_url;
     }
 
-    await User.create(user);
+    const new_user = await User.create(user);
 
-    const token = createToken(user);
+    const token = createToken(new_user);
 
     return res.cookie('token', token, {
         httpOnly: true,

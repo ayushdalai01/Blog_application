@@ -50,15 +50,18 @@ router.post('/addnew', upload.single('coverImage'), async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 
-    // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    //     return res.status(404).send('Blog not found');
-    // }
-
     const blogx = await Blog.findById(req.params.id).populate('createdBy')
+    // console.log(blogx);
 
     const commentsx = await Comment.find({ blogId : req.params.id }).populate(
         'createdBy'
     );
+
+    // console.log(JSON.stringify(commentsx, null, 2));
+    // console.log(req.user);
+
+    // commentsx.forEach(comment => console.log(comment.createdBy))
+    // console.log(commentsx)
 
     return res.render('blog', {
         user : req.user,
@@ -104,9 +107,12 @@ router.post('/comment/:blogId', async (req, res) => {
 
     const comment = await Comment.create({
         content : req.body.content,
-        blogId : req.params.blogId,
-        createdBy : req.user._id
+        createdBy : req.user._id,
+        blogId : req.params.blogId
     })
+
+    // console.log(req.user);
+    // console.log(comment.createdBy);
 
     return res.redirect(`/blog/${req.params.blogId}`)
 })

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { schema } = require('./user')
 
 const commentSchema = new Schema(
   {
@@ -12,7 +13,7 @@ const commentSchema = new Schema(
       ref: 'user',
     },
     blogId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId, 
       ref: 'blog',
     }
   },
